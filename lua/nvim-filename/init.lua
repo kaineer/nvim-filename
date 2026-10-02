@@ -37,6 +37,42 @@ local function basename()
   return vim.fn.fnamemodify(name, ":t")
 end
 
+--- Take a prefix of `str` whose display width is at most `max_width`.
+local function display_prefix(str, max_width)
+  if max_width <= 0 then
+    return ""
+  end
+  if vim.fn.strdisplaywidth(str) <= max_width then
+    return str
+  end
+
+  local result = ""
+  for i = 0, vim.fn.strchars(str) - 1 do
+    local ch = vim.fn.strcharpart(str, i, 1)
+    if vim.fn.strdisplaywidth(result .. ch) > max_width then
+      break
+    end
+    result = result .. ch
+  end
+  return result
+end
+
+local function format_line(name, width)
+  local ellipsis = "…"
+  local text = " " .. name
+
+  if vim.fn.strdisplaywidth(text) > width then
+    text = display_prefix(text, width - vim.fn.strdisplaywidth(ellipsis)) .. ellipsis
+  end
+
+  local pad = width - vim.fn.strdisplaywidth(text)
+  if pad > 0 then
+    text = text .. string.rep(" ", pad)
+  end
+
+  return text
+end
+
 local function show()
   if vim.fn.mode() ~= "n" then
     return
@@ -45,7 +81,6 @@ local function show()
   stop_timer()
   close_float()
 
-  local text = basename()
   local win = vim.api.nvim_get_current_win()
   local width = vim.api.nvim_win_get_width(win)
   local height = vim.api.nvim_win_get_height(win)
@@ -53,6 +88,8 @@ local function show()
   if height < 1 or width < 1 then
     return
   end
+
+  local text = format_line(basename(), width)
 
   float_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(float_buf, 0, -1, false, { text })
@@ -64,7 +101,7 @@ local function show()
     win = win,
     row = height - 1,
     col = 0,
-    width = math.max(1, math.min(#text, width)),
+    width = width,
     height = 1,
     style = "minimal",
     border = "none",
