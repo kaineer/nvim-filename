@@ -67,6 +67,7 @@ local function show()
     width = math.max(1, math.min(#text, width)),
     height = 1,
     style = "minimal",
+    border = "none",
     focusable = false,
     zindex = 50,
     noautocmd = true,
