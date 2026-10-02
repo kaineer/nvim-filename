@@ -61,4 +61,4 @@ Or with options:
 - Triggers on keypresses in normal mode
 - Draws a one-line floating window at the bottom of the current window
 - Re-shows and resets the timer on each keypress
-- Auto-loads via `plugin/nvim-filename.lua` (or call `require("nvim-filename").setup()`)
+- Auto-setup on `VimEnter` with defaults if you never call `setup()`; your own `setup()` runs once and wins

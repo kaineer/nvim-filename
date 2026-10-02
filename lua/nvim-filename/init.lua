@@ -124,12 +124,12 @@ local function show()
 end
 
 function M.setup(opts)
-  config = vim.tbl_deep_extend("force", defaults, opts or {})
-
   if enabled then
     return
   end
   enabled = true
+
+  config = vim.tbl_deep_extend("force", defaults, opts or {})
 
   vim.on_key(function()
     if vim.fn.mode() ~= "n" then
