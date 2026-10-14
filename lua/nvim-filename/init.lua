@@ -97,7 +97,7 @@ local function show()
   vim.bo[float_buf].bufhidden = "wipe"
 
   local row = height - 1
-  if vim.fn.line('.') == vim.fn.line('$') then
+  if vim.fn.line('.') == vim.fn.line('w$') then
     row = row - 1
   end
 
