@@ -96,10 +96,15 @@ local function show()
   vim.bo[float_buf].modifiable = false
   vim.bo[float_buf].bufhidden = "wipe"
 
+  local row = height - 1
+  if vim.fn.line('.') == vim.fn.line('$') then
+    row = row - 1
+  end
+
   float_win = vim.api.nvim_open_win(float_buf, false, {
     relative = "win",
     win = win,
-    row = height - 1,
+    row = row,
     col = 0,
     width = width,
     height = 1,
